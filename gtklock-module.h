@@ -7,28 +7,42 @@
 
 struct Window {
 	GdkMonitor *monitor;
+
 	GtkWidget *window;
-	GtkWidget *revealer;
 	GtkWidget *window_box;
 	GtkWidget *body;
 	GtkWidget *input_box;
 	GtkWidget *input_label;
 	GtkWidget *input_field;
+	GtkWidget *message_box;
 	GtkWidget *unlock_button;
 	GtkWidget *error_label;
 	GtkWidget *clock_label;
+
 	gulong enter_notify_handler;
+
 	void *module_data;
 };
 
 struct GtkLock {
 	GtkApplication *app;
 	GArray *windows;
+	GArray *messages;
+	GArray *errors;
+
 	struct Window *focused_window;
+	gboolean hidden;
+	guint idle_timeout;
+
 	guint draw_clock_source;
+	guint idle_hide_source;
+
 	gboolean use_layer_shell;
 	gboolean use_input_inhibit;
-	char time[8];
+	gboolean use_idle_hide;
+
+	char *time;
+	char *time_format;
 };
 
 const gchar *g_module_check_init(GModule *m);

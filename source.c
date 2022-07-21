@@ -5,11 +5,14 @@
 
 #include "gtklock-module.h"
 
-static void hello_label(struct Window *ctx) {
+static void add_label(struct Window *ctx) {
 	ctx->module_data = gtk_label_new("Hello world!");
-	gtk_widget_set_halign(ctx->error_label, GTK_ALIGN_END);
 	gtk_container_add(GTK_CONTAINER(ctx->window_box), ctx->module_data);
 	gtk_widget_show(ctx->module_data);
+}
+
+static void remove_label(struct Window *ctx) {
+	if(ctx->module_data != NULL) gtk_widget_destroy(ctx->module_data);
 }
 
 const gchar *g_module_check_init(GModule *m) {
@@ -31,7 +34,7 @@ void on_output_change(struct GtkLock *gtklock) {
 
 void on_focus_change(struct GtkLock *gtklock, struct Window *win, struct Window *old) {
 	g_print("Hello focus change!\n");
-	if(win->module_data != NULL) gtk_widget_destroy(win->module_data);
+	if(!gtklock->hidden) remove_label(win);
 }
 
 void on_window_empty(struct GtkLock *gtklock, struct Window *ctx) {
@@ -41,6 +44,15 @@ void on_window_empty(struct GtkLock *gtklock, struct Window *ctx) {
 
 void on_body_empty(struct GtkLock *gtklock, struct Window *ctx) {
 	g_print("Hello body empty!\n");
-	hello_label(ctx);
+	add_label(ctx);
+}
+
+void on_idle_hide(struct GtkLock *gtklock) {
+	g_print("Hello idle hide!\n");
+}
+
+void on_idle_show(struct GtkLock *gtklock) {
+	g_print("Hello idle show!\n");
+	if(gtklock->focused_window) remove_label(gtklock->focused_window);
 }
 
