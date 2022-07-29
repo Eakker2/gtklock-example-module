@@ -1,4 +1,4 @@
-// gtklock-example-module
+// gtklock-userinfo-module
 // Copyright (c) 2022 Jovan Lanik
 
 // Module header
@@ -43,6 +43,7 @@ struct GtkLock {
 
 	char *time;
 	char *time_format;
+	char *config_path;
 };
 
 const gchar *g_module_check_init(GModule *m);
